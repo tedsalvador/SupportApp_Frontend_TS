@@ -5,21 +5,23 @@
     <form @submit.prevent="signUp">
       <div>
         <label for="firstName">First Name</label>
-        <input type="text" id="firstName" v-model="firstName" required />
+        <input type="text" id="firstName" v-model="firstName" placeholder="First Name" required />
       </div>
       <div>
         <label for="lastName">Last Name</label>
-        <input type="text" id="lastName" v-model="lastName" required />
+        <input type="text" id="lastName" v-model="lastName" placeholder="Last Name" required />
       </div>
       <div>
         <label for="username">Username</label>
-        <input type="text" id="username" v-model="username" required />
+        <input type="text" id="username" v-model="username" placeholder="Username" required />
       </div>
       <div>
         <label for="password">Password</label>
-        <input type="password" id="password" v-model="password" required />
+        <input type="password" id="password" v-model="password" placeholder="Password" required />
       </div>
       <button type="submit">Sign Up</button>
+      <p v-if="error" style="color:red">{{ error }}</p>
+      <p v-if="success" style="color:green">{{ success }}</p>
     </form>
     <p>Already have an account? <router-link to="/login">Login</router-link></p>
   </div>
@@ -36,26 +38,40 @@ const firstName = ref('');
 const lastName = ref('');
 const username = ref('');
 const password = ref('');
+//const error = ref(null);
+const error = ref('');
+const success = ref('');
 
 async function signUp() {
   try {
-    const response = await axios.post('http://localhost:8080/api/signup', {
-      first_name: firstName.value,
-      last_name: lastName.value,
+    const response = await axios.post('http://localhost:8080/api/users/signup', {
+     // const response = await axios.post('http://localhost:8080/api/users', {
+      firstName: firstName.value,
+      lastName: lastName.value,
       username: username.value,
-      user_password: password.value,
-      user_role: 'USER',
+/*       user_password: password.value,
+      user_role: 'USER', */
+      userPassword: password.value,
+      userRole: 'USER' // Asigna un rol predeterminado, si es necesario      
     });
     if (response.status === 201) {
-      alert('Sign up successful');
+      alert('User registered successfully!');
+      error.value = '';
       router.push('/login');
     } else {
       alert('Sign up failed');
     }
   } catch (error) {
-    console.error(error);
-    alert('Sign up failed');
-  }
+/*     console.error(error);
+    alert('Sign up failed'); */
+    if (err.response && err.response.data && err.response.data.message) {
+      error.value = err.response.data.message;
+    } else {
+      error.value = 'An error occurred. Please try again later.';
+    }
+    success.value = '';
+  } 
+
 }
 </script>
 

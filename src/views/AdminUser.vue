@@ -27,9 +27,10 @@
       </form>
       <h2>All Users</h2>
       <ul>
-        <li v-for="user in users" :key="user.id_user">
-          {{ user.username }} - {{ user.user_role }}
-          <button @click="deleteUser(user.id_user)">Delete</button>
+        <!-- <li v-for="user in users" :key="user.id_user"> -->
+        <li v-for="user in users" :key="user.idUser">
+          {{ user.idUser }} - {{ user.firstName }} - {{ user.lastName }} - {{ user.username }} - {{ user.userRole }}
+          <button @click="deleteUser(user.idUser)">Delete</button>
         </li>
       </ul>
     </div>
@@ -48,15 +49,24 @@
   
   async function createUser() {
     try {
-      const response = await axios.post('http://localhost:8080/api/users', {
-        first_name: firstName.value,
-        last_name: lastName.value,
+      const response = await axios.post('http://localhost:8080/api/users/signup', {
+        firstName: firstName.value,
+        lastName: lastName.value,
         username: username.value,
-        user_password: password.value,
-        user_role: userRole.value,
+        userPassword: password.value,
+        userRole: userRole.value,
       });
       if (response.status === 201) {
         users.value.push(response.data);
+        alert('User Created successfull !');
+        firstName.value='',
+        lastName.value='',
+        username.value='',
+        password.value='',
+        userRole.value=''
+        const refreshPage = () => {
+          window.location.reload(); // Reloads the current page
+        };
       }
     } catch (error) {
       console.error(error);
@@ -77,8 +87,13 @@
   async function deleteUser(idUser) {
     try {
       const response = await axios.delete(`http://localhost:8080/api/users/${idUser}`);
-      if (response.status === 200) {
+      alert("status del api : " + response.status);
+      if (response.status === 201) {
         users.value = users.value.filter(user => user.id_user !== idUser);
+        alert('User Deleted successfull !');
+
+          window.location.reload(); // Reloads the current page
+
       }
     } catch (error) {
       console.error(error);
