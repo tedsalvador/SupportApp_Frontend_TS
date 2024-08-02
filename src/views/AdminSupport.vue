@@ -4,9 +4,9 @@
       <h1>Manage Support Requests</h1>
       <h2>All Support Requests</h2>
       <ul>
-        <li v-for="request in supportRequests" :key="request.id_support">
-          {{ request.description }} - {{ request.status }}
-          <button @click="deleteRequest(request.id_support)">Delete</button>
+        <li v-for="request in supportRequests" :key="request.idSupport">
+          {{ request.idSupport }} - {{ request.dateRequest}} - {{ request.description }} - {{ request.supportType }} - {{ request.status }}
+          <button @click="deleteRequest(request.idSupport)">Delete</button>
         </li>
       </ul>
     </div>
@@ -25,7 +25,7 @@
     } catch (error) {
       console.error(error);
       alert('Failed to fetch support requests');
-    }
+    } 
   }
   
   async function deleteRequest(idSupport) {

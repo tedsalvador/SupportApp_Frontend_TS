@@ -15,8 +15,8 @@
       </form>
       <h2>Your Support Requests</h2>
       <ul>
-        <li v-for="request in supportRequests" :key="request.id_support">
-          {{ request.description }} - {{ request.status }}
+        <li v-for="request in supportRequests" :key="request.idSupport">
+          {{ request.idSupport }} - {{ request.description }} - {{ request.status }}
           <button @click="cancelRequest(request.id_support)">Cancel</button>
         </li>
       </ul>
@@ -52,12 +52,15 @@
   
   async function fetchSupportRequests() {
     try {
-      const response = await axios.get(`http://localhost:8080/api/support_requests?username=${userStore.user.username}`);
+      alert("valor de id_user" + userStore.idUser + " -- " + userStore.id_user);
+      //const response = await axios.get(`http://localhost:8080/api/support_requests?username=${userStore.user.username}`);
+      const response = await axios.get(`http://localhost:8080/api/support_requests/1`);
+
       supportRequests.value = response.data;
-    } catch (error) {
-      console.error(error);
-      alert('Failed to fetch support requests');
-    }
+    } catch (err) {
+    console.error('Detailed error:', err.response || err.message || err);
+    error.value = err.response?.data?.message || 'An error occurred. Please try again.';
+  }
   }
   
   async function cancelRequest(idSupport) {
